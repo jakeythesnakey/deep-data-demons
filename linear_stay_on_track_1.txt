@@ -1,0 +1,30 @@
+def reward_function(params):
+    '''
+    Rewarding the agent to follow center line and stay on track
+    '''
+    
+    # Read input parameters
+    track_width = params['track_width']
+    distance_from_center = params['distance_from_center']
+    all_wheels_on_track = params['all_wheels_on_track']
+    
+     # Calculate 3 markers that are at varying distances away from the center line
+    marker_1 = 0.1 * track_width
+    marker_2 = 0.25 * track_width
+    marker_3 = 0.5 * track_width
+    
+    #set reward
+    reward = 100
+    #set punishment multiplier for deviating from centre (highter = greater punishment)
+    dfc_multiplier = 1
+    # Set punishment for going off track (Higher = greater punishment)
+    off_track_multiplier = 0.5
+    
+    if distance_from_center != 0:
+        reward = reward / (distance_from_center * dfc_multiplier)
+    
+    if all_wheels_on_track != True:
+        reward = reward / off_track_multiplier
+
+    
+    return float(reward)
