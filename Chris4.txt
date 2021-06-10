@@ -1,0 +1,43 @@
+def reward_function(params):
+
+    
+    # Read input parameters
+    track_width = params['track_width']
+    distance_from_center = params['distance_from_center']
+    is_left_of_center = params['is_left_of_center']
+    is_offtrack = params['is_offtrack']
+    closest_waypoints = params['closest_waypoints']
+    progress = params['progress']
+    steering = abs(params['steering_angle']) # We don't care whether it is left or right steering
+    
+    # Base reward
+    reward = progress + 10
+        
+    if closest_waypoints[0] < 9: # If on the home straight  
+        if is_left_of_center:
+            reward = 1e-3  # Stay on right lane
+    elif 9 <= closest_waypoints[0] < 26: # If on hairpin 
+        if not is_left_of_center:
+            reward = 1e-3  # Stay on left lane
+    elif 26 <= closest_waypoints[0] < 37: # If on right turn 
+        if is_left_of_center:
+            reward = 1e-3  # Stay on right lane
+    elif 37 <= closest_waypoints[0] < 46: # If on 3rd corner 
+        if not is_left_of_center:
+            reward = 1e-3  # Stay on left lane
+    # If between wp 46 - 49 return base reward (stay center)
+    elif 49 <= closest_waypoints[0] < 53: # If on 4th corner 
+        if not is_left_of_center:
+            reward = 1e-3  # Stay on left lane
+    elif 54 <= closest_waypoints[0] < 60: # If on mini straight 
+        if is_left_of_center:
+            reward = 1e-3  # Stay on right lane
+    elif 60 <= closest_waypoints[0] < 69: # If on last corner 
+        if not is_left_of_center:
+            reward = 1e-3  # Stay on left lane
+    
+    if is_offtrack:
+        reward = 1e-3
+    
+    
+    return float(reward)
